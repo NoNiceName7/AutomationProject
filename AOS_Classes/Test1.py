@@ -5,7 +5,6 @@ from time import sleep
 from selenium.webdriver.support.select import Select
 from AOS_Classes.AOS_Main_Page import AOS_Main_Page
 from AOS_Classes.AOS_Speakers_Page import AOS_Speakers_Page
-from AOS_Classes.Tablet_Page import Tablets_Page
 
 # 1
 service_chrome = Service(r"D:\Program Files\Expris Academy\Selenium\chromedriver.exe")
@@ -16,11 +15,7 @@ driver.maximize_window()
 driver.implicitly_wait(10)
 Main_page = AOS_Main_Page(driver)
 Speakers_page = AOS_Speakers_Page(driver)
-#Main_page.categories_list(1).click()
-#Speakers_page.speaker_list(7).click()
-Main_page.categories_list(2).click()
-tablet = Tablets_Page(driver)
-tablet.list_of_tablets(1)
-
+Main_page.categories_list(1).click()
+Speakers_page.speaker_list(4).click()
 
 sleep(10)
