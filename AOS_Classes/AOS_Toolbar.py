@@ -40,3 +40,11 @@ class AOS_Toolbar:
         quantities = self.driver.find_elements(By.XPATH, "//table/tbody/tr/td[2]/a/label[1]")
         product_quantity = quantities[number - 1].text
         return product_quantity
+
+    def price_check(self,number):
+        shopping_cart_icon = self.driver.find_element(By.ID, "shoppingCartLink")
+        ActionChains(self.driver).move_to_element(shopping_cart_icon).perform()
+        price_texts = self.driver.find_elements(By.XPATH,"//table/tbody/tr/td[3]/p")
+        price = price_texts[number-1].text
+        return price[1:]
+
