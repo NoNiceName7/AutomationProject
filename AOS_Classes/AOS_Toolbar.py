@@ -55,6 +55,11 @@ class AOS_Toolbar:
         remove_product = products[number - 1]
         remove_product.click()
 
+    def enter_shopping_cart(self):
+        self.driver.find_element(By.ID, "shoppingCartLink").click()
+        shopping_cart_nav = self.driver.find_element(By.XPATH, "//div/section/article/nav/a[2]")
+        return shopping_cart_nav.text
+
     def edit_shopping_cart(self, number): #shoppingcartclass
         self.driver.find_element(By.ID, "shoppingCartLink").click()
         edit = self.driver.find_elements(By.CSS_SELECTOR, ".actions>a[class='edit ng-scope']")
