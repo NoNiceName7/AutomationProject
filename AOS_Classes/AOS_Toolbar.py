@@ -46,5 +46,5 @@ class AOS_Toolbar:
         ActionChains(self.driver).move_to_element(shopping_cart_icon).perform()
         price_texts = self.driver.find_elements(By.XPATH,"//table/tbody/tr/td[3]/p")
         price = price_texts[number-1].text
-        return price[1:]
+        return price
 
