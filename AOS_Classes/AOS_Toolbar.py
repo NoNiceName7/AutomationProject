@@ -59,3 +59,15 @@ class AOS_Toolbar:
         self.driver.find_element(By.ID, "shoppingCartLink").click()
         shopping_cart_nav = self.driver.find_element(By.XPATH, "//div/section/article/nav/a[2]")
         return shopping_cart_nav.text
+
+    def edit_shopping_cart(self, number): #shoppingcartclass
+        self.driver.find_element(By.ID, "shoppingCartLink").click()
+        edit = self.driver.find_elements(By.CSS_SELECTOR, ".actions>a[class='edit ng-scope']")
+        edit[number - 1].click()
+
+    def quantity_check_cart_page(self,product_num): #shoppingcartclass
+        product_edit = self.driver.find_elements(By.XPATH,"//table/tbody/tr/td[5]/label[2]")
+        return product_edit[product_num-1].text
+
+
+

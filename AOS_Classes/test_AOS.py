@@ -129,4 +129,42 @@ class TestAOS_Main_Page(TestCase):
         laptop_product.add_to_cart()
         cart_nav = AOS_Toolbar(self.driver).enter_shopping_cart()
         self.assertEqual("SHOPPING CART", cart_nav)
+        self.toolbar.returning_main_page()
+
+    def test_edit_quantity_in_cart(self):
+        # add a laptop
+        self.Main_page.categories_list(3).click()
+        laptop_page = AOS_Category_Page(self.driver)
+        laptop_page.product_list(9).click()
+        laptop_product = AOS_Product_Page(self.driver)
+        laptop_product.add_to_cart()
+        self.toolbar.returning_main_page()
+        # add a headphone
+        self.Main_page.categories_list(5).click()
+        headphone_page = AOS_Category_Page(self.driver)
+        headphone_page.product_list(4).click()
+        headphone_product = AOS_Product_Page(self.driver)
+        headphone_product.add_to_cart()
+        self.toolbar.returning_main_page()
+        edit = AOS_Toolbar(self.driver)
+        # press the button 'edit' in shopping cart page
+        edit.edit_shopping_cart(2)
+        laptop_product.quantity_change(2)
+        laptop_product.add_to_cart()
+        sleep(5)
+        quantity1 = AOS_Toolbar(self.driver).quantity_check_cart_page(2)
+        self.assertEqual("2",quantity1)  # bug
+        edit.edit_shopping_cart(1)
+        headphone_product.quantity_change(3)
+        headphone_product.add_to_cart()
+        quantity2 = AOS_Toolbar(self.driver).quantity_check_cart_page(1)
+        sleep(5)
+        self.assertEqual("3",quantity2)
+        self.toolbar.returning_main_page()
+
+
+
+
+
+
 
