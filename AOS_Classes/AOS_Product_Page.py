@@ -5,15 +5,9 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 
-class AOS_Mice_Page:
+class AOS_Product_Page:
     def __init__(self, driver: webdriver.Chrome):
         self.driver = driver
-
-    def mice_type(self):
-        return self.driver.find_elements(By.CSS_SELECTOR, "ul>li[class='ng-scope']>img")
-
-    def mice_list(self, number):
-        return self.mice_type()[number - 1]
 
     def add_to_cart(self):
         return self.driver.find_element(By.CSS_SELECTOR, ".fixedBtn>button").click()

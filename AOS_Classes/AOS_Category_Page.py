@@ -5,12 +5,14 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 
-class AOS_Speakers_Page:
+class AOS_Category_Page:
     def __init__(self, driver: webdriver.Chrome):
         self.driver = driver
 
-    def speaker_type(self):
+    def product_type(self):
         return self.driver.find_elements(By.CSS_SELECTOR, "ul>li[class='ng-scope']>img")
 
-    def speaker_list(self, number):
-        return self.speaker_type()[number - 1]
+    def product_list(self, number):
+        return self.product_type()[number - 1]
+
+
