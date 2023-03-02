@@ -39,3 +39,5 @@ class TestAOS_Main_Page(TestCase):
         self.toolbar.returning_main_page()
         total = AOS_Toolbar(self.driver).small_window()
         self.assertIn('6', total)
+
+

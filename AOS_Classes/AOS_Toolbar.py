@@ -11,7 +11,7 @@ class AOS_Toolbar:
         self.driver = driver
 
     def returning_main_page(self):
-        self.driver.find_element(By.CSS_SELECTOR,".logo>a").click()
+        self.driver.find_element(By.CSS_SELECTOR, ".logo>a").click()
 
     def small_window(self):
         """"Checking the total quantity at the window cart """
@@ -21,20 +21,20 @@ class AOS_Toolbar:
         total = small_window.text
         return total
 
-    def color_check(self,number):
+    def color_check(self, number):
         """"Selected the wanted color text of product"""
         shopping_cart_icon = self.driver.find_element(By.ID, "shoppingCartLink")
         ActionChains(self.driver).move_to_element(shopping_cart_icon).perform()
-        colors_texts = self.driver.find_elements(By.XPATH,"//table/tbody/tr/td[2]/a/label/span")
-        color = colors_texts[number-1].text
+        colors_texts = self.driver.find_elements(By.XPATH, "//table/tbody/tr/td[2]/a/label/span")
+        color = colors_texts[number - 1].text
         return color
 
-    def name_check(self,number):
+    def name_check(self, number):
         """"Selected the wanted name text of product"""
         shopping_cart_icon = self.driver.find_element(By.ID, "shoppingCartLink")
         ActionChains(self.driver).move_to_element(shopping_cart_icon).perform()
-        name_texts = self.driver.find_elements(By.XPATH,"//table/tbody/tr/td[2]/a/h3")
-        name = name_texts[number-1].text
+        name_texts = self.driver.find_elements(By.XPATH, "//table/tbody/tr/td[2]/a/h3")
+        name = name_texts[number - 1].text
         return name
 
     def quantity_check(self, number):
@@ -45,11 +45,17 @@ class AOS_Toolbar:
         product_quantity = quantities[number - 1].text
         return product_quantity
 
-    def price_check(self,number):
+    def price_check(self, number):
         """"Selected the wanted price text of product without $ """
         shopping_cart_icon = self.driver.find_element(By.ID, "shoppingCartLink")
         ActionChains(self.driver).move_to_element(shopping_cart_icon).perform()
-        price_texts = self.driver.find_elements(By.XPATH,"//table/tbody/tr/td[3]/p")
-        price = price_texts[number-1].text
+        price_texts = self.driver.find_elements(By.XPATH, "//table/tbody/tr/td[3]/p")
+        price = price_texts[number - 1].text
         return price[1:]
+
+    def removing_product(self, number):
+        """"Removing selected product from cart window"""
+        products = self.driver.find_elements(By.XPATH, "//table/tbody/tr/td[3]/div/div")
+        remove_product = products[number - 1]
+        remove_product.click()
 
