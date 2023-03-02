@@ -39,6 +39,7 @@ class TestAOS_Main_Page(TestCase):
         self.toolbar.returning_main_page()
         total = AOS_Toolbar(self.driver).small_window()
         self.assertIn('6', total)
+        self.toolbar.returning_main_page()
 
     def test_correct_products(self):
         """"Checking if the product name,quantity,color,price are correct"""
@@ -88,12 +89,13 @@ class TestAOS_Main_Page(TestCase):
         laptop_name = AOS_Toolbar(self.driver).name_check(1)
         self.assertEqual('HP ENVY X360 - 15T LAPTOP', laptop_name)
         # check the price of the products
-        speaker_price =AOS_Toolbar(self.driver).price_check(3)
+        speaker_price = AOS_Toolbar(self.driver).price_check(3)
         self.assertEqual('$258.00', speaker_price)
         tablet_price = AOS_Toolbar(self.driver).price_check(2)
         self.assertEqual('$1,437.00', tablet_price)
         laptop_price = AOS_Toolbar(self.driver).price_check(1)
         self.assertEqual('$2,799.96', laptop_price)
+        self.toolbar.returning_main_page()
 
     def test_remove_product(self):
         """"Removing product from cart window and checking if total is correct"""
@@ -116,6 +118,15 @@ class TestAOS_Main_Page(TestCase):
         product.removing_product(2)
         total = AOS_Toolbar(self.driver).small_window()
         self.assertIn('1', total)
+        self.toolbar.returning_main_page()
 
-
+    def test_cart_page_nav(self):
+        # add a laptop
+        self.Main_page.categories_list(3).click()
+        laptop_page = AOS_Category_Page(self.driver)
+        laptop_page.product_list(10).click()
+        laptop_product = AOS_Product_Page(self.driver)
+        laptop_product.add_to_cart()
+        cart_nav = AOS_Toolbar(self.driver).enter_shopping_cart()
+        self.assertEqual("SHOPPING CART", cart_nav)
 
