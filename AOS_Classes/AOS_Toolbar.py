@@ -19,3 +19,24 @@ class AOS_Toolbar:
         small_window = self.driver.find_element(By.CSS_SELECTOR, "ul>li>#toolTipCart>div>table>tfoot>tr>td>span>label")
         total = small_window.text
         return total
+
+    def color_check(self,number):
+        shopping_cart_icon = self.driver.find_element(By.ID, "shoppingCartLink")
+        ActionChains(self.driver).move_to_element(shopping_cart_icon).perform()
+        colors_texts = self.driver.find_elements(By.XPATH,"//table/tbody/tr/td[2]/a/label/span")
+        color = colors_texts[number-1].text
+        return color
+
+    def name_check(self,number):
+        shopping_cart_icon = self.driver.find_element(By.ID, "shoppingCartLink")
+        ActionChains(self.driver).move_to_element(shopping_cart_icon).perform()
+        name_texts = self.driver.find_elements(By.XPATH,"//table/tbody/tr/td[2]/a/h3")
+        name = name_texts[number-1].text
+        return name
+
+    def quantity_check(self, number):
+        shopping_cart_icon = self.driver.find_element(By.ID, "shoppingCartLink")
+        ActionChains(self.driver).move_to_element(shopping_cart_icon).perform()
+        quantities = self.driver.find_elements(By.XPATH, "//table/tbody/tr/td[2]/a/label[1]")
+        product_quantity = quantities[number - 1].text
+        return product_quantity
