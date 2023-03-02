@@ -130,6 +130,54 @@ class TestAOS_Main_Page(TestCase):
         cart_nav = AOS_Toolbar(self.driver).enter_shopping_cart()
         self.assertEqual("SHOPPING CART", cart_nav)
         self.toolbar.returning_main_page()
+    def test_correct_total(self):
+        """This test checks that the sum of the totals for each product ordered is the same as the total in the cart"""
+        # Order the speakers and print the description of the order
+        self.Main_page.categories_list(1).click()
+        speaker_page = AOS_Category_Page(self.driver)
+        speaker_page.product_list(6).click()
+        speaker_product = AOS_Product_Page(self.driver)
+        speaker = AOS_Product_Page(self.driver)
+        speaker_n = speaker.get_name()
+        speaker_p = speaker.get_unit_price()
+        speaker_number = 2
+        speaker_q = speaker.quantity_change(speaker_number)
+        speaker.add_to_cart()
+        print(f"product name = {speaker_n}\nproduct price = {speaker_p}\nproduct quantity = {speaker_number}")
+        self.toolbar.returning_main_page()
+        # Order the tablets and print the description of the order
+        self.Main_page.categories_list(2).click()
+        tablet_page = AOS_Category_Page(self.driver)
+        tablet_page.product_list(1).click()
+        tablet = AOS_Product_Page(self.driver)
+        tablet_n = tablet.get_name()
+        tablet_p = tablet.get_unit_price()
+        tablet_number = 3
+        tablet_q = tablet.quantity_change(tablet_number)
+        print(f"product name = {tablet_n}\nproduct price = {tablet_p}\nproduct quantity = {tablet_number}")
+        tablet.add_to_cart()
+        self.toolbar.returning_main_page()
+        # Order the laptops and print the description of the order
+        self.Main_page.categories_list(3).click()
+        laptop_page = AOS_Category_Page(self.driver)
+        laptop_page.product_list(1).click()
+        laptop = AOS_Product_Page(self.driver)
+        laptop_n = laptop.get_name()
+        laptop_p = laptop.get_unit_price()
+        laptop_number = 4
+        laptop_q = laptop.quantity_change(laptop_number)
+        laptop.add_to_cart()
+        print(f"product name = {laptop_n}\nproduct price = {laptop_p}\nproduct quantity = {laptop_number}")
+        # Calculate the amount the order is supposed to be
+        total_speaker = speaker_p * speaker_number
+        total_tablet = tablet_p * tablet_number
+        total_laptop = laptop_p * laptop_number
+        total_purchase = total_laptop + total_tablet + total_speaker
+        # get the amount of the total in the shopping cart and compare with the previous calculation
+        total_shopping_cart = AOS_Toolbar(self.driver)
+        total_in_sc = total_shopping_cart.total_of_order()
+        self.assertEqual(total_purchase, total_in_sc)
+        self.toolbar.returning_main_page()
 
     def test_edit_quantity_in_cart(self):
         # add a laptop

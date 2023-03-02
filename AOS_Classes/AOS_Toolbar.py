@@ -69,5 +69,13 @@ class AOS_Toolbar:
         product_edit = self.driver.find_elements(By.XPATH,"//table/tbody/tr/td[5]/label[2]")
         return product_edit[product_num-1].text
 
+    def total_of_order(self):
+        """This function enters the shopping cart, finds the total and returns it as a float"""
+        self.driver.find_element(By.ID, "shoppingCartLink").click()
+        total = self.driver.find_element(By.XPATH, "//div/section/article/div/table/tfoot/tr/td[2]/span[2]")
+        total = total.text.replace("$", "").replace(",", "")
+        total = float(total)
+        return total
+
 
 
