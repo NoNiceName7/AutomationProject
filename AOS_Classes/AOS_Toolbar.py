@@ -13,6 +13,13 @@ class AOS_Toolbar:
     def returning_main_page(self):
         self.driver.find_element(By.CSS_SELECTOR,".logo>a").click()
 
+    def quantity_check(self, number):
+        shopping_cart_icon = self.driver.find_element(By.ID, "shoppingCartLink")
+        ActionChains(self.driver).move_to_element(shopping_cart_icon).perform()
+        quantities = self.driver.find_elements(By.XPATH, "//table/tbody/tr/td[2]/a/label[1]")
+        product_quantity = quantities[number-1].text
+        return product_quantity
+
     def small_window(self):
         shopping_cart_icon = self.driver.find_element(By.ID, "shoppingCartLink")
         ActionChains(self.driver).move_to_element(shopping_cart_icon).perform()
@@ -34,17 +41,11 @@ class AOS_Toolbar:
         name = name_texts[number-1].text
         return name
 
-    def quantity_check(self, number):
-        shopping_cart_icon = self.driver.find_element(By.ID, "shoppingCartLink")
-        ActionChains(self.driver).move_to_element(shopping_cart_icon).perform()
-        quantities = self.driver.find_elements(By.XPATH, "//table/tbody/tr/td[2]/a/label[1]")
-        product_quantity = quantities[number - 1].text
-        return product_quantity
 
     def price_check(self,number):
         shopping_cart_icon = self.driver.find_element(By.ID, "shoppingCartLink")
         ActionChains(self.driver).move_to_element(shopping_cart_icon).perform()
         price_texts = self.driver.find_elements(By.XPATH,"//table/tbody/tr/td[3]/p")
         price = price_texts[number-1].text
-        return price[1:]
+        return price
 

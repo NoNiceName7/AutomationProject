@@ -33,3 +33,4 @@ Mice_product.add_to_cart()
 sleep(2)
 Return_main_page.returning_main_page()
 sleep(10)
+
