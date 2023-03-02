@@ -54,3 +54,8 @@ class AOS_Toolbar:
         products = self.driver.find_elements(By.XPATH, "//table/tbody/tr/td[3]/div/div")
         remove_product = products[number - 1]
         remove_product.click()
+
+    def enter_shopping_cart(self):
+        self.driver.find_element(By.ID, "shoppingCartLink").click()
+        shopping_cart_nav = self.driver.find_element(BY.XPATH, "//div/section/article/nav/a[2]")
+        return shopping_cart_nav.text
