@@ -14,6 +14,7 @@ class AOS_Toolbar:
         self.driver.find_element(By.CSS_SELECTOR,".logo>a").click()
 
     def small_window(self):
+        """"Checking the total quantity at the window cart """
         shopping_cart_icon = self.driver.find_element(By.ID, "shoppingCartLink")
         ActionChains(self.driver).move_to_element(shopping_cart_icon).perform()
         small_window = self.driver.find_element(By.CSS_SELECTOR, "ul>li>#toolTipCart>div>table>tfoot>tr>td>span>label")
@@ -21,6 +22,7 @@ class AOS_Toolbar:
         return total
 
     def color_check(self,number):
+        """"Selected the wanted color text of product"""
         shopping_cart_icon = self.driver.find_element(By.ID, "shoppingCartLink")
         ActionChains(self.driver).move_to_element(shopping_cart_icon).perform()
         colors_texts = self.driver.find_elements(By.XPATH,"//table/tbody/tr/td[2]/a/label/span")
@@ -28,6 +30,7 @@ class AOS_Toolbar:
         return color
 
     def name_check(self,number):
+        """"Selected the wanted name text of product"""
         shopping_cart_icon = self.driver.find_element(By.ID, "shoppingCartLink")
         ActionChains(self.driver).move_to_element(shopping_cart_icon).perform()
         name_texts = self.driver.find_elements(By.XPATH,"//table/tbody/tr/td[2]/a/h3")
@@ -35,6 +38,7 @@ class AOS_Toolbar:
         return name
 
     def quantity_check(self, number):
+        """"Selected the wanted quantity text of product"""
         shopping_cart_icon = self.driver.find_element(By.ID, "shoppingCartLink")
         ActionChains(self.driver).move_to_element(shopping_cart_icon).perform()
         quantities = self.driver.find_elements(By.XPATH, "//table/tbody/tr/td[2]/a/label[1]")
@@ -42,6 +46,7 @@ class AOS_Toolbar:
         return product_quantity
 
     def price_check(self,number):
+        """"Selected the wanted price text of product without $ """
         shopping_cart_icon = self.driver.find_element(By.ID, "shoppingCartLink")
         ActionChains(self.driver).move_to_element(shopping_cart_icon).perform()
         price_texts = self.driver.find_elements(By.XPATH,"//table/tbody/tr/td[3]/p")
