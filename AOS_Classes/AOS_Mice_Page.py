@@ -14,3 +14,11 @@ class AOS_Mice_Page:
 
     def mice_list(self, number):
         return self.mice_type()[number - 1]
+
+    def add_to_cart(self):
+        return self.driver.find_element(By.CSS_SELECTOR, ".fixedBtn>button").click()
+
+    def quantity_change(self, number):
+        quantity = self.driver.find_element(By.NAME, "quantity")
+        quantity.click()
+        return quantity.send_keys(number)
