@@ -41,6 +41,7 @@ class TestAOS_Main_Page(TestCase):
         self.assertIn('6', total)
 
     def test_correct_products(self):
+        """"Checking if the product name,quantity,color,price are correct"""
         # add a speaker
         self.Main_page.categories_list(1).click()
         speaker_page = AOS_Category_Page(self.driver)
@@ -93,3 +94,28 @@ class TestAOS_Main_Page(TestCase):
         self.assertEqual('$1,437.00', tablet_price)
         laptop_price = AOS_Toolbar(self.driver).price_check(1)
         self.assertEqual('$2,799.96', laptop_price)
+
+    def test_remove_product(self):
+        """"Removing product from cart window and checking if total is correct"""
+        # add a headphone
+        self.Main_page.categories_list(5).click()
+        headphone_page = AOS_Category_Page(self.driver)
+        headphone_page.product_list(1).click()
+        headphone_product = AOS_Product_Page(self.driver)
+        headphone_product.add_to_cart()
+        self.toolbar.returning_main_page()
+        # add a laptop
+        self.Main_page.categories_list(3).click()
+        laptop_page = AOS_Category_Page(self.driver)
+        laptop_page.product_list(11).click()
+        laptop_product = AOS_Product_Page(self.driver)
+        laptop_product.add_to_cart()
+        self.toolbar.returning_main_page()
+        # removing headphone product
+        product = AOS_Toolbar(self.driver)
+        product.removing_product(2)
+        total = AOS_Toolbar(self.driver).small_window()
+        self.assertIn('1', total)
+
+
+
