@@ -18,14 +18,3 @@ class AOS_Product_Page:
         quantity.click()
         return quantity.send_keys(number)
 
-    def small_window(self):
-        shopping_cart_icon = self.driver.find_element(By.ID, "shoppingCartLink")
-        ActionChains(self.driver).move_to_element(shopping_cart_icon).perform()
-        small_window = self.driver.find_element(By.CSS_SELECTOR, "ul>li>#toolTipCart>div>table>tfoot>tr>td>span>label")
-        total = small_window.text
-        return total
-
-
-# wait for the history element to be visible
-# wait = WebDriverWait()
-# wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, "td[class='ng-binding']")))

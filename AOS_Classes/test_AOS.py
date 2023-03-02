@@ -18,28 +18,24 @@ class TestAOS_Main_Page(TestCase):
         self.driver.maximize_window()
         self.driver.implicitly_wait(10)
         self.Main_page = AOS_Main_Page(self.driver)
-        self.Return_main_page = AOS_Toolbar(self.driver)
+        self.toolbar = AOS_Toolbar(self.driver)
 
     def test_checking_cart_items(self):
         """Checking when adding 2 different products with different quantity
-        showing the correct details at cart window"""
+        showing the correct total at cart window"""
         self.Main_page.categories_list(4).click()
         mice_page = AOS_Category_Page(self.driver)
         mice_page.product_list(2).click()
         mice_product = AOS_Product_Page(self.driver)
         mice_product.quantity_change(2)
-        sleep(2)
         mice_product.add_to_cart()
-        sleep(2)
-        self.Return_main_page.returning_main_page()
+        self.toolbar.returning_main_page()
         self.Main_page.categories_list(1).click()
         speaker_page = AOS_Category_Page(self.driver)
         speaker_page.product_list(3).click()
-        speaker_page = AOS_Product_Page(self.driver)
-        speaker_page.quantity_change(4)
-        sleep(2)
-        speaker_page.add_to_cart()
-        sleep(2)
-        self.Return_main_page.returning_main_page()
-        sleep(10)
-
+        speaker_product = AOS_Product_Page(self.driver)
+        speaker_product.quantity_change(4)
+        speaker_product.add_to_cart()
+        self.toolbar.returning_main_page()
+        total = AOS_Toolbar(self.driver).small_window()
+        self.assertIn('6', total)

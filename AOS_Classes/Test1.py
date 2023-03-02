@@ -5,9 +5,6 @@ from time import sleep
 from selenium.webdriver.support.select import Select
 from AOS_Classes.AOS_Main_Page import AOS_Main_Page
 from AOS_Classes.AOS_Category_Page import AOS_Category_Page
-from AOS_Classes.AOS_Tablet_Page import AOS_Tablet_Page
-from AOS_Classes.AOS_Headphones_Page import AOS_Headphones_Page
-from AOS_Classes.AOS_Mice_Page import AOS_Mice_Page
 from AOS_Classes.AOS_Toolbar import AOS_Toolbar
 from AOS_Classes.AOS_Product_Page import AOS_Product_Page
 
