@@ -8,6 +8,8 @@ from AOS_Classes.AOS_Main_Page import AOS_Main_Page
 from AOS_Classes.AOS_Category_Page import AOS_Category_Page
 from AOS_Classes.AOS_Toolbar import AOS_Toolbar
 from AOS_Classes.AOS_Product_Page import AOS_Product_Page
+from AOS_Classes.AOS_ShoppingCart_Page import AOS_ShoppingCart_Page
+from AOS_Classes.AOS_Registration_Page import AOS_Registration_Page
 
 
 class TestAOS_Main_Page(TestCase):
@@ -127,9 +129,10 @@ class TestAOS_Main_Page(TestCase):
         laptop_page.product_list(10).click()
         laptop_product = AOS_Product_Page(self.driver)
         laptop_product.add_to_cart()
-        cart_nav = AOS_Toolbar(self.driver).enter_shopping_cart()
+        cart_nav = AOS_ShoppingCart_Page(self.driver).enter_shopping_cart()
         self.assertEqual("SHOPPING CART", cart_nav)
         self.toolbar.returning_main_page()
+
     def test_correct_total(self):
         """This test checks that the sum of the totals for each product ordered is the same as the total in the cart"""
         # Order the speakers and print the description of the order
@@ -174,7 +177,7 @@ class TestAOS_Main_Page(TestCase):
         total_laptop = laptop_p * laptop_number
         total_purchase = total_laptop + total_tablet + total_speaker
         # get the amount of the total in the shopping cart and compare with the previous calculation
-        total_shopping_cart = AOS_Toolbar(self.driver)
+        total_shopping_cart = AOS_ShoppingCart_Page(self.driver)
         total_in_sc = total_shopping_cart.total_of_order()
         self.assertEqual(total_purchase, total_in_sc)
         self.toolbar.returning_main_page()
@@ -194,25 +197,56 @@ class TestAOS_Main_Page(TestCase):
         headphone_product = AOS_Product_Page(self.driver)
         headphone_product.add_to_cart()
         self.toolbar.returning_main_page()
-        edit = AOS_Toolbar(self.driver)
+        edit = AOS_ShoppingCart_Page(self.driver)
         # press the button 'edit' in shopping cart page
         edit.edit_shopping_cart(2)
         laptop_product.quantity_change(2)
         laptop_product.add_to_cart()
         sleep(5)
-        quantity1 = AOS_Toolbar(self.driver).quantity_check_cart_page(2)
-        self.assertEqual("2",quantity1)  # bug
+        quantity1 = AOS_ShoppingCart_Page(self.driver).quantity_check_cart_page(2)
+        self.assertEqual("2", quantity1)  ####### bug ########
         edit.edit_shopping_cart(1)
         headphone_product.quantity_change(3)
         headphone_product.add_to_cart()
-        quantity2 = AOS_Toolbar(self.driver).quantity_check_cart_page(1)
+        quantity2 = AOS_ShoppingCart_Page(self.driver).quantity_check_cart_page(1)
         sleep(5)
-        self.assertEqual("3",quantity2)
+        self.assertEqual("3", quantity2)
         self.toolbar.returning_main_page()
 
+    def test_tablets_nav(self):
+        self.Main_page.categories_list(2).click()
+        tablet_page = AOS_Category_Page(self.driver)
+        tablet_page.product_list(3).click()
+        add_cart = AOS_Product_Page(self.driver)
+        add_cart.add_to_cart()
+        self.driver.back()
+        title = self.driver.find_element(By.XPATH, "//div/section/article/h3").text
+        self.assertEqual("TABLETS", title)
+        self.driver.back()
+        special_offer = self.driver.find_element(By.CSS_SELECTOR, "div>section>#special_offer_items>h3").text
+        self.assertEqual("SPECIAL OFFER", special_offer)
+        self.toolbar.returning_main_page()
 
-
-
-
-
+    def test_new_user_checkout(self):
+        # add a tablet
+        self.Main_page.categories_list(2).click()
+        tablet_page = AOS_Category_Page(self.driver)
+        tablet_page.product_list(2).click()
+        add_cart = AOS_Product_Page(self.driver)
+        add_cart.add_to_cart()
+        self.toolbar.returning_main_page()
+        # add a headphone
+        self.Main_page.categories_list(5).click()
+        headphone_page = AOS_Category_Page(self.driver)
+        headphone_page.product_list(3).click()
+        headphone_product = AOS_Product_Page(self.driver)
+        headphone_product.add_to_cart()
+        # clicking checkout
+        self.toolbar.checkout()
+        self.driver.find_element(By.ID, "registration_btnundefined").click()
+        account = AOS_Registration_Page(self.driver)
+        account.create_account("LgEzz", "12345Aa", "LgEz@gmail.com")
+        self.driver.find_element(By.NAME,"i_agree").click()
+        self.driver.find_element(By.ID,"register_btnundefined").click()
+        self.driver.find_element(By.ID,"next_btn").click()
 
