@@ -3,17 +3,21 @@ from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from time import sleep
-from selenium.webdriver.support.select import Select
+from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 from AOS_Classes.AOS_Main_Page import AOS_Main_Page
 from AOS_Classes.AOS_Category_Page import AOS_Category_Page
 from AOS_Classes.AOS_Toolbar import AOS_Toolbar
 from AOS_Classes.AOS_Product_Page import AOS_Product_Page
 from AOS_Classes.AOS_ShoppingCart_Page import AOS_ShoppingCart_Page
 from AOS_Classes.AOS_Registration_Page import AOS_Registration_Page
+from AOS_Classes.AOS_Login import AOS_Login
 
 
 class TestAOS_Main_Page(TestCase):
     def setUp(self):
+        """A setup for all tests"""
         service_chrome = Service(r"D:\Program Files\Expris Academy\Selenium\chromedriver.exe")
         self.driver = webdriver.Chrome(service=service_chrome)
         self.driver.get("https://www.advantageonlineshopping.com/#/")
@@ -21,6 +25,7 @@ class TestAOS_Main_Page(TestCase):
         self.driver.implicitly_wait(10)
         self.Main_page = AOS_Main_Page(self.driver)
         self.toolbar = AOS_Toolbar(self.driver)
+        self.wait = WebDriverWait(self.driver, 10)
 
     def test_checking_cart_items(self):
         """Checking when adding 2 different products with different quantity
@@ -124,6 +129,7 @@ class TestAOS_Main_Page(TestCase):
 
     def test_cart_page_nav(self):
         # add a laptop
+        """"Checking the nav of shopping cart"""
         self.Main_page.categories_list(3).click()
         laptop_page = AOS_Category_Page(self.driver)
         laptop_page.product_list(10).click()
@@ -183,6 +189,7 @@ class TestAOS_Main_Page(TestCase):
         self.toolbar.returning_main_page()
 
     def test_edit_quantity_in_cart(self):
+        """"Test edit option for 2 product to change there quantity"""
         # add a laptop
         self.Main_page.categories_list(3).click()
         laptop_page = AOS_Category_Page(self.driver)
@@ -214,6 +221,7 @@ class TestAOS_Main_Page(TestCase):
         self.toolbar.returning_main_page()
 
     def test_tablets_nav(self):
+        """"Test the option going back from tablet product to main page"""
         self.Main_page.categories_list(2).click()
         tablet_page = AOS_Category_Page(self.driver)
         tablet_page.product_list(3).click()
@@ -228,6 +236,7 @@ class TestAOS_Main_Page(TestCase):
         self.toolbar.returning_main_page()
 
     def test_new_user_checkout(self):
+        """"Test checkout of new user with Safepay"""
         # add a tablet
         self.Main_page.categories_list(2).click()
         tablet_page = AOS_Category_Page(self.driver)
@@ -244,9 +253,85 @@ class TestAOS_Main_Page(TestCase):
         # clicking checkout
         self.toolbar.checkout()
         self.driver.find_element(By.ID, "registration_btnundefined").click()
+        # creating new account
         account = AOS_Registration_Page(self.driver)
-        account.create_account("LgEzz", "12345Aa", "LgEz@gmail.com")
-        self.driver.find_element(By.NAME,"i_agree").click()
-        self.driver.find_element(By.ID,"register_btnundefined").click()
-        self.driver.find_element(By.ID,"next_btn").click()
+        account.create_account("boot20", "12345Aa", "LgEz@gmail.com")
+        self.driver.find_element(By.NAME, "i_agree").click()
+        self.driver.find_element(By.ID, "register_btnundefined").click()
+        self.driver.find_element(By.ID, "next_btn").click()
+        # login to safepay
+        safepaylogin = AOS_ShoppingCart_Page(self.driver)
+        safepaylogin.safepay("boot20", "12345Aa")
+        self.driver.find_element(By.ID, "pay_now_btn_SAFEPAY").click()
+        self.wait.until(EC.visibility_of_element_located((By.XPATH, "//div[@id='orderPaymentSuccess']/h2/span")))
+        # checking valid purchase
+        valid_purchase = self.driver.find_element(By.XPATH, "//div[@id='orderPaymentSuccess']/h2/span")
+        self.assertIn("Thank you for buying with Advantage", valid_purchase.text)
+        shopping_cart_icon = self.driver.find_element(By.ID, "shoppingCartLink")
+        ActionChains(self.driver).move_to_element(shopping_cart_icon).perform()
+        self.wait.until(EC.visibility_of_element_located((By.XPATH, "//ul/li/tool-tip-cart[@id='toolTipCart']")))
+        empty_cart = self.driver.find_element(By.XPATH, "//ul/li/tool-tip-cart/div/div/label[2]")
+        self.assertIn("Your shopping cart is empty", empty_cart.text)
+        order_num = self.driver.find_element(By.ID, "orderNumberLabel").text
+        # entering My order
+        user_icon = self.driver.find_element(By.CSS_SELECTOR, "svg[id='menuUser']")
+        ActionChains(self.driver).move_to_element(user_icon).perform()
+        self.wait.until(EC.invisibility_of_element_located((By.XPATH, "//ul/li/tool-tip-cart[@id='toolTipCart']")))
+        self.driver.find_element(By.ID, "menuUserLink").click()
+        self.driver.find_element(By.CSS_SELECTOR, "#loginMiniTitle>label[class='option ng-scope']").click()
+        order_num2 = self.driver.find_elements(By.XPATH, "//table/tbody/tr[2]/td/label")
+        # check that order number is in "My Order"
+        self.assertEqual(order_num2[0].text, order_num)
+        self.toolbar.returning_main_page()
 
+    def test_exist_user_checkout(self):
+        """"Test checkout of exist user with CC"""
+        # add a laptop
+        self.Main_page.categories_list(3).click()
+        laptop_page = AOS_Category_Page(self.driver)
+        laptop_page.product_list(3).click()
+        add_cart = AOS_Product_Page(self.driver)
+        add_cart.add_to_cart()
+        self.toolbar.returning_main_page()
+        # add a mice
+        self.Main_page.categories_list(4).click()
+        mice_page = AOS_Category_Page(self.driver)
+        mice_page.product_list(3).click()
+        mice_product = AOS_Product_Page(self.driver)
+        mice_product.add_to_cart()
+        self.toolbar.checkout()
+        account = AOS_Login(self.driver)
+        account.login_order_payment("Liavg", "12345Aa")
+        self.driver.find_element(By.CSS_SELECTOR, "button[id='next_btn']").click()
+        self.driver.find_element(By.CSS_SELECTOR, "input[name='masterCredit']").click()
+        payment = AOS_ShoppingCart_Page(self.driver)
+        payment.mastercard("123456789101", "123", "Liav")
+        sleep(5)  #######bug##########
+        shopping_cart_icon = self.driver.find_element(By.ID, "shoppingCartLink")
+        ActionChains(self.driver).move_to_element(shopping_cart_icon).perform()
+        self.wait.until(EC.visibility_of_element_located((By.XPATH, "//ul/li/tool-tip-cart[@id='toolTipCart']")))
+        empty_cart = self.driver.find_element(By.XPATH, "//ul/li/tool-tip-cart/div/div/label[2]")
+        self.assertIn("Your shopping cart is empty", empty_cart.text)
+        order_num = self.driver.find_element(By.ID, "orderNumberLabel").text
+        # entering My order
+        user_icon = self.driver.find_element(By.CSS_SELECTOR, "svg[id='menuUser']")
+        ActionChains(self.driver).move_to_element(user_icon).perform()
+        self.wait.until(EC.invisibility_of_element_located((By.XPATH, "//ul/li/tool-tip-cart[@id='toolTipCart']")))
+        self.driver.find_element(By.ID, "menuUserLink").click()
+        self.driver.find_element(By.CSS_SELECTOR, "#loginMiniTitle>label[class='option ng-scope']").click()
+        order_num2 = self.driver.find_elements(By.XPATH, "//table/tbody/tr[2]/td/label")
+        # check that order number is in "My Order"
+        self.assertEqual(order_num2[0].text, order_num)
+        self.toolbar.returning_main_page()
+
+    def test_login_logut(self):
+        """"Test login,logout"""
+        user = AOS_Login(self.driver)
+        user.open_login_window()
+        user.sign_in("Ezra7", "12345Aa")
+        self.wait.until(EC.invisibility_of_element_located((By.CSS_SELECTOR, ".PopUp>div")))
+        name = user.check_signed_in()
+        self.assertEqual("Ezra7", name)
+        user.sign_out()
+        self.assertEqual('', user.check_sign_out().text)
+        self.toolbar.returning_main_page()
